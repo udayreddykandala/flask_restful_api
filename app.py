@@ -1,13 +1,34 @@
-from flask import Flask,request,jsonify
-import logging
-from db import stores,items
-from flask_smorest import abort
-import uuid
+from flask import Flask
+from flask_smorest import Api
+from resources.item import blp as ItemBlueprint
+from resources.store import blp as StoreBlueprint
+
+
 
 app= Flask(__name__)
 
+app.config["PROPAGATE_EXCEPTIONS"] = True
+app.config["API_TITLE"] = "Stores REST API"
+app.config["API_VERSION"] = "v1"
+app.config["OPENAPI_VERSION"] = "3.0.3"
+app.config["OPENAPI_URL_PREFIX"] = "/"
+app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
 
+api=Api(app)
+
+api.register_blueprint(ItemBlueprint)
+api.register_blueprint(StoreBlueprint)
+
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
+
+
+
+'''
 @app.get("/store")
 def get_stores():
     return { "stores" : list(stores.values())}
@@ -121,5 +142,9 @@ def update_item(item_id):
 def get_all_items():
     return { "items" : list(items.values()) }
     
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
+
+'''
